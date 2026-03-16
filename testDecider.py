@@ -40,6 +40,6 @@ class TestStringMethods(unittest.TestCase):
         const1: Constant = Constant(10)
         const2: Constant = Constant(0)
         division: Division = Division(const1, const2)
-        self.assertRaises(ZeroDivisionError, division.evaluateAST())
+        self.assertRaises(ZeroDivisionError, division.evaluateAST)
 if __name__ == '__main__':
     unittest.main()
