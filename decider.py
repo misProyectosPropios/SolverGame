@@ -4,7 +4,6 @@ from typing import Optional
 
 type Number = int | float
 
-
 @dataclass
 class AST(ABC):
     # These are the class-level type hints you were looking for
@@ -28,7 +27,9 @@ class Addition(AST):
     
 class Substract(AST):
     def evaluateAST(self):
-        raise NotImplementedError(self.descriptionErrorShouldBeImplemented())
+        leftValue: Number = self.left.evaluateAST()
+        rightValue: Number = self.right.evaluateAST()
+        return leftValue - rightValue
 
 class Multiplication(AST):
     def evaluateAST(self):
@@ -38,7 +39,9 @@ class Multiplication(AST):
 
 class Division(AST):
     def evaluateAST(self):
-        raise NotImplementedError(self.descriptionErrorShouldBeImplemented())
+        leftValue: Number = self.left.evaluateAST()
+        rightValue: Number = self.right.evaluateAST()
+        return leftValue / rightValue
 
 @dataclass
 class Constant(AST):
