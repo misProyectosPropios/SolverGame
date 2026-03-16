@@ -25,8 +25,21 @@ class TestStringMethods(unittest.TestCase):
     def test_substract(self):
         const1: Constant = Constant(10)
         const2: Constant = Constant(5)
-        substract: Multiplication = Multiplication(const1, const2)
+        substract: Substract = Substract(const1, const2)
         self.assertEqual(substract.evaluateAST(), 10 - 5)
         self.assertNotEqual(substract.evaluateAST(), 10)
+
+    def test_division_without_zero(self):
+        const1: Constant = Constant(10)
+        const2: Constant = Constant(5)
+        division: Division = Division(const1, const2)
+        self.assertEqual(division.evaluateAST(), 10 / 5)
+        self.assertNotEqual(division.evaluateAST(), 1)
+
+    def test_division_over_zero(self):
+        const1: Constant = Constant(10)
+        const2: Constant = Constant(0)
+        division: Division = Division(const1, const2)
+        self.assertRaises(ZeroDivisionError, division.evaluateAST())
 if __name__ == '__main__':
     unittest.main()
