@@ -1,8 +1,11 @@
 from abc import ABC, abstractmethod
 from dataclasses import dataclass
 from typing import Optional
+import copy
 
 type Number = int | float
+
+
 
 @dataclass
 class AST(ABC):
@@ -15,33 +18,53 @@ class AST(ABC):
         """This method must be implemented by all subclasses."""
         pass
 
+    @abstractmethod
+    def generateAllCombinations(self):
+        """This method must be implemented by all subclasses."""
+        pass
+
     @staticmethod
     def descriptionErrorShouldBeImplemented():
         return "This method should be implemented"
 
-class Addition(AST):
+class BinaryOp(AST):
+    @abstractmethod
+    def apply(self, left: Number, right: Number) -> Number:
+        raise self.descriptionErrorShouldBeImplemented
+
     def evaluateAST(self) -> Number:
-        leftValue: Number = self.left.evaluateAST()
-        rightValue: Number = self.right.evaluateAST()
+        leftValue = self.left.evaluateAST()
+        rightValue = self.right.evaluateAST()
+        return self.apply(leftValue, rightValue)
+
+    def generateAllCombinations(self):
+        left_combs = self.left.generateAllCombinations()
+        right_combs = self.right.generateAllCombinations()
+
+        return [
+            op(copy.deepcopy(l), copy.deepcopy(r))
+            for op in ops
+            for l in left_combs
+            for r in right_combs
+        ]
+
+class Addition(BinaryOp):
+    def apply(self, leftValue, rightValue) -> Number:
         return leftValue + rightValue
     
-class Substract(AST):
-    def evaluateAST(self):
-        leftValue: Number = self.left.evaluateAST()
-        rightValue: Number = self.right.evaluateAST()
+class Substract(BinaryOp):
+    def apply(self, leftValue, rightValue):
         return leftValue - rightValue
 
-class Multiplication(AST):
-    def evaluateAST(self):
-        leftValue: Number = self.left.evaluateAST()
-        rightValue: Number = self.right.evaluateAST()
+class Multiplication(BinaryOp):
+    def apply(self, leftValue, rightValue):
         return leftValue * rightValue
 
-class Division(AST):
-    def evaluateAST(self):
-        leftValue: Number = self.left.evaluateAST()
-        rightValue: Number = self.right.evaluateAST()
+class Division(BinaryOp):
+    def apply(self, leftValue, rightValue):
         return leftValue / rightValue
+
+ops = [Addition, Substract, Multiplication, Division]
 
 @dataclass
 class Constant(AST):
@@ -54,3 +77,6 @@ class Constant(AST):
 
     def evaluateAST(self):
         return self.value
+    
+    def generateAllCombinations(self):
+        return [self]
