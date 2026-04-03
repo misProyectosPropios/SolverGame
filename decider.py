@@ -209,15 +209,6 @@ def obtainSolution(values: list[int], value: int) -> list[AST]:
     return isThereOptionThatGeneratesNumberXInAllPermutations(values, value)
 
 
-
-PRECEDENCE = {
-    Addition: 1,
-    Substract: 1,
-    Multiplication: 2,
-    Division: 2,
-}
-
-
 def main():
     list_res = obtainSolution([Constant(1), Constant(3), Constant(5), Constant(0)], 10)
     for res in list_res:
