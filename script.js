@@ -235,7 +235,20 @@ def main():
 
 async function init() {
     pyodide = await loadPyodide();
-    await pyodide.runPythonAsync(python_code);
+    // 🔥 Load Python file from repo
+    const response = await fetch("main.py");
+    const code = await response.text();
+
+    // 🔥 Write into Pyodide filesystem
+    pyodide.FS.writeFile("main.py", code);
+
+    await pyodide.runPythonAsync(`
+import sys
+if "" not in sys.path:
+    sys.path.append("")
+    `);
+
+    //await pyodide.runPythonAsync(python_code);
 
     document.getElementById("solveBtn").disabled = false;
     return pyodide;
@@ -250,6 +263,10 @@ async function run() {
     const target = document.getElementById("target").value;
         
     const result = await pyodide.runPythonAsync(`
+import importlib
+import main
+importlib.reload(main)
+
 nums = [Constant(int(x)) for x in "${numbers}".split(",")]
 res = obtainSolution(nums, int(${target}))
 
