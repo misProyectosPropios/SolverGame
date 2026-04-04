@@ -267,8 +267,8 @@ import importlib
 import main
 importlib.reload(main)
 
-nums = [Constant(int(x)) for x in "${numbers}".split(",")]
-res = obtainSolution(nums, int(${target}))
+nums = [main.Constant(int(x)) for x in "${numbers}".split(",")]
+res = main.obtainSolution(nums, int(${target}))
 
 [f"{str(r)} = {r.evaluateAST()}" for r in res[:20]]
     `);
