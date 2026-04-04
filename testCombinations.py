@@ -137,6 +137,26 @@ class TestParenthesisNeeded(unittest.TestCase):
         res: int = value.numberOfParenthesisNeeded()
         self.assertEqual(res, 2)
 
+class TestParenthesisNeeded(unittest.TestCase):
+    def test_prettifyInConstant(self):
+        value: AST = Constant(2)
+        res: str  = value.prettifyMinParenthesis()
+        self.assertEqual(res, "2")
+
+    def test_prettifyAddition(self):
+        value: AST = Addition(Constant(2), Constant(4))
+        res: str  = value.prettifyMinParenthesis()
+        self.assertEqual(res, "2+4")
+
+    def test_prettifyMultiplication(self):
+        value: AST = Multiplication(Constant(2), Constant(4))
+        res: str  = value.prettifyMinParenthesis()
+        self.assertEqual(res, "2*4")
+
+    def test_prettifyMultiplicationOfAddition(self):
+        value: AST = Multiplication(Constant(2), Addition(Constant(3), Constant(4)))
+        res: str  = value.prettifyMinParenthesis()
+        self.assertEqual(res, "2*(3+4)")
 
 if __name__ == '__main__':
     unittest.main()
