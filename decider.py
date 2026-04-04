@@ -15,7 +15,7 @@ class AST(ABC):
     right: Optional['AST'] = None
 
     def __str__(self) -> str:
-        return self.prettify()
+        return self.prettifyMinParenthesis()
 
     @abstractmethod
     def evaluateAST(self):
@@ -30,6 +30,11 @@ class AST(ABC):
     @abstractmethod
     def prettify(self):
         """Prints the arithmetic expression in infix notation with all parenthesis"""
+        pass
+        
+    @abstractmethod
+    def prettifyMinParenthesis(self):
+        """Prints the arithmetic expression in infix notation with only the needed parenthesis"""
         pass
 
     @abstractmethod
@@ -57,6 +62,12 @@ class BinaryOp(AST):
 
     def prettify(self):
         return f"({self.left.prettify()} {self.symbol()} {self.right.prettify()})"
+
+    def prettifyMinParenthesis(self, parent_prec: int = 0):
+        prec = self.precedence()
+        if prec < parent_prec:
+                return f"({self.prettifyMinParenthesis(prec)})"
+        return f"{self.left.prettifyMinParenthesis(prec)}{self.symbol()}{self.right.prettifyMinParenthesis(prec)}"
 
     def evaluateAST(self) -> Number:
         leftValue = self.left.evaluateAST()
@@ -144,6 +155,10 @@ class Constant(AST):
     def prettify(self):
         return str(self.value)
 
+    def prettifyMinParenthesis(self, parent_prec: int = 0):
+        """Prints the arithmetic expression in infix notation with only the needed parenthesis"""
+        return str(self.value)
+
     def generateAllCombinations(self):
         return [self]
 
@@ -210,7 +225,7 @@ def obtainSolution(values: list[int], value: int) -> list[AST]:
 
 
 def main():
-    list_res = obtainSolution([Constant(1), Constant(3), Constant(5), Constant(0)], 10)
+    list_res = obtainSolution([Constant(1), Constant(1), Constant(5), Constant(1)], 10)
     for res in list_res:
         print(res)
 
