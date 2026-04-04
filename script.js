@@ -239,8 +239,8 @@ async function init() {
     const response = await fetch("main.py");
     const code = await response.text();
 
-    // 🔥 Write into Pyodide filesystem
     pyodide.FS.writeFile("main.py", code);
+    
 
     await pyodide.runPythonAsync(`
 import sys
@@ -263,15 +263,17 @@ async function run() {
     const target = document.getElementById("target").value;
         
     const result = await pyodide.runPythonAsync(`
-import importlib
+import sys
+if "main" in sys.modules:
+    del sys.modules["main"]
+
 import main
-importlib.reload(main)
 
 nums = [main.Constant(int(x)) for x in "${numbers}".split(",")]
 res = main.obtainSolution(nums, int(${target}))
 
 [f"{str(r)} = {r.evaluateAST()}" for r in res[:20]]
-    `);
+`);
     
     document.getElementById("output").textContent = result;
 
