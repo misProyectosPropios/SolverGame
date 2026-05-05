@@ -279,10 +279,10 @@ res = main.obtainSolution(nums, int(${target}))
 
 }
 
-const debug = await pyodide.runPythonAsync(`
+pyodideReadyPromise.then(async (pyodide) => {
+    const debug = await pyodide.runPythonAsync(`
 import main
 dir(main)
 `);
-console.log(debug);
-
-init();
+    console.log(debug);
+});
