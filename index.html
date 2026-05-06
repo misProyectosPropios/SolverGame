@@ -1,23 +1,41 @@
 <!DOCTYPE html>
 <html>
 <head>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="stylesheet" href="style.css">
   <script src="https://cdn.jsdelivr.net/pyodide/v0.26.1/full/pyodide.js"></script>
 </head>
 <body>
 
-<h1>Expression Solver</h1>
+<main class="app">
+  <section class="solver-panel">
+    <div class="header">
+      <h1>Expression Solver</h1>
+      <p id="status">Loading solver...</p>
+    </div>
 
-<input id="number1" type="number" value="1">
-<input id="number2" type="number" value="1">
-<input id="number3" type="number" value="5">
-<input id="number4" type="number" value="1">
-<input id="target" type="number" value="10">
-<button id="solveBtn" onclick="run()" disabled>Solve</button>
-<p id="status">Loading solver...</p>
+    <form id="solver-form" class="controls">
+      <fieldset class="number-fields">
+        <legend>Numbers</legend>
+        <input id="number1" type="number" value="1" aria-label="First number">
+        <input id="number2" type="number" value="1" aria-label="Second number">
+        <input id="number3" type="number" value="5" aria-label="Third number">
+        <input id="number4" type="number" value="1" aria-label="Fourth number">
+      </fieldset>
 
-<ul id="result-list">
-    <!-- The result will be inserted here -->
-</ul>
+      <label class="target-field" for="target">
+        Target
+        <input id="target" type="number" value="10">
+      </label>
+
+      <button id="solveBtn" type="submit" disabled>Solve</button>
+    </form>
+
+    <ul id="result-list" aria-live="polite">
+      <!-- The result will be inserted here -->
+    </ul>
+  </section>
+</main>
 
 <script src="script.js"></script>
 
