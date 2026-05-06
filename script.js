@@ -258,7 +258,12 @@ async function run() {
     
     let pyodide = await pyodideReadyPromise;
 
-    const numbers = document.getElementById("numbers").value;
+    const numbers = [
+        document.getElementById("number1").value,
+        document.getElementById("number2").value,
+        document.getElementById("number3").value,
+        document.getElementById("number4").value,
+    ];
     const target = document.getElementById("target").value;
         
     const result = await pyodide.runPythonAsync(`
@@ -268,13 +273,20 @@ if "main" in sys.modules:
 
 import main
 
-nums = [main.Constant(int(x)) for x in "${numbers}".split(",")]
-res = main.obtainSolution(nums, int(${target}))
+nums = [main.Constant(int(x)) for x in ${JSON.stringify(numbers)}]
+res = main.obtainSolution(nums, int(${JSON.stringify(target)}))
 
 [f"{str(r)} = {r.evaluateAST()}" for r in res[:20]]
 `);
     
-    document.getElementById("output").textContent = result;
+    const resultList = document.getElementById("result-list");
+    resultList.innerHTML = "";
+
+    result.toJs().forEach((solution) => {
+        const item = document.createElement("li");
+        item.textContent = solution;
+        resultList.appendChild(item);
+    });
 
 }
 
