@@ -108,6 +108,7 @@ class Addition(BinaryOp):
         return 1
 
 class Substract(BinaryOp):
+
     def apply(self, leftValue, rightValue):
         return leftValue - rightValue
 
@@ -139,6 +140,7 @@ class Division(BinaryOp):
 
 
 ops = [Addition, Substract, Multiplication, Division]
+ops = [Addition, Subtract, Multiplication, Division]
 
 @dataclass
 class Constant(AST):

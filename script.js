@@ -235,11 +235,9 @@ def main():
 
 async function init() {
     pyodide = await loadPyodide();
-    // 🔥 Load Python file from repo
-    const response = await fetch("main.py");
-    const code = await response.text();
-
-    pyodide.FS.writeFile("main.py", code);
+    // Use the embedded python_code directly to ensure the 'main' module 
+    // is correctly populated in the virtual file system.
+    pyodide.FS.writeFile("main.py", python_code);
     
 
     await pyodide.runPythonAsync(`
@@ -255,6 +253,7 @@ if "" not in sys.path:
 }
 
 let pyodideReadyPromise = init();
+
 async function run() {
     
     let pyodide = await pyodideReadyPromise;
