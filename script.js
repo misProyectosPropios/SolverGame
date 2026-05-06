@@ -5,7 +5,6 @@ from abc import ABC, abstractmethod
 from dataclasses import dataclass
 import itertools
 from typing import Optional
-import copy
 
 type Number = int | float
 
@@ -82,7 +81,7 @@ class BinaryOp(AST):
         right_combs = self.right.generateAllCombinations()
 
         return [
-            op(copy.deepcopy(l), copy.deepcopy(r))
+            op(l, r)
             for op in ops
             for l in left_combs
             for r in right_combs
@@ -202,23 +201,27 @@ def generateAllGraphs(constants: list[Constant]) -> list[AST]:
 
 def isThereOptionThatGeneratesNumberX(options: list[AST], value: int) -> list[AST]:
     res = []
-    allValues = []
     for index, option in enumerate(options):
+        if not option.hasAtMostOneParenthesis():
+            continue
         evaluate: Number
         try:
             evaluate = option.evaluateAST()
-            allValues.append((index, evaluate))
         except ZeroDivisionError:
             continue
-        hasParenthesisAtMostRequired = option.hasAtMostOneParenthesis()
-        if evaluate == value and hasParenthesisAtMostRequired:
+        if evaluate == value:
             res.append(option)
     return res
 
 def isThereOptionThatGeneratesNumberXInAllPermutations(options: list[AST], value: int) -> list[AST]:    
     allOptions = []
+    seen_permutations = set()
     perms = itertools.permutations(options)
     for perm in perms:
+        perm_key = tuple(str(option) for option in perm)
+        if perm_key in seen_permutations:
+            continue
+        seen_permutations.add(perm_key)
         res = isThereOptionThatGeneratesNumberX(generateAllGraphs(list(perm)), value)
         allOptions += res
     return allOptions
